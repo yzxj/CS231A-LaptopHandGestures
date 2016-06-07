@@ -65,8 +65,8 @@ def segment(frame, c_list):
 			seg = thresh
 		else:
 			seg = cv2.add(seg, thresh)
-	cv2.imshow('frame', seg)
-	cv2.waitKey(99999)
+	# cv2.imshow('frame', seg)
+	# cv2.waitKey(99999)
 def mouse_shift(x,y):
 	win32api.mouse_event(win32con.MOUSEEVENTF_MOVE,x,y)
 	# win32api.mouse_event(win32con.MOUSEEVENTF_MOVE, \
@@ -95,17 +95,20 @@ def detect(frame):
 			M = cv2.moments(cnt)
 			cent_x = int(M['m10']/M['m00'])
 			cent_y = int(M['m01']/M['m00'])
-			if len(defects)>0:
-				for i in range(defects.shape[0]):
-					s,e,f,d = defects[i,0]
-					start = tuple(cnt[s][0])
-					end = tuple(cnt[e][0])
-					far = tuple(cnt[f][0])
-					cv2.line(frame,start,end,[0,255,0],2)
-					cv2.circle(frame,far,5,[0,0,255],-1)
-				cv2.imshow('cvhull', frame)
-				cv2.waitKey(99999)
-		return (cent_x, cent_y), len(defects)
+			# if len(defects)>0:
+			# 	for i in range(defects.shape[0]):
+			# 		s,e,f,d = defects[i,0]
+			# 		start = tuple(cnt[s][0])
+			# 		end = tuple(cnt[e][0])
+			# 		far = tuple(cnt[f][0])
+			# 		cv2.line(frame,start,end,[0,255,0],2)
+			# 		cv2.circle(frame,far,5,[0,0,255],-1)
+				# cv2.imshow('cvhull', frame)
+				# cv2.waitKey(99999)
+		try:
+			return (cent_x, cent_y), len(defects)
+		except:
+			return (0,0), 0
 	return (0,0), 0
 
 ###------- Main Function -------###
@@ -138,6 +141,8 @@ if __name__ == '__main__':
 			open_tries += 1
 			cv2.waitKey(100)
 			ret, frame = cap.read()
+
+		cv2.imshow('Original', frame)
 
 		# For Background subtraction
 		frame = fgbg.apply(frame)
